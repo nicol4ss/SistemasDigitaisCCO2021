@@ -1,0 +1,27 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use ieee.std_logic_arth.all;
+
+
+entity notas is
+	generic(N: integer := 4);
+	port (nota1, nota2, nota3, nota4: in std_logic_vector(N-1 downto 0);
+          result: out std_logic_vector(N-1 downto 0);
+         aprovado, reprovado, exame: out std_logic);
+end notas;
+
+architecture comportamento of notas is
+    signal NF: std_logic_vector(5 downto 0);
+begin
+
+    NF = nota1 + nota2 + nota3 + nota4
+
+    result = NF / 100
+
+
+	aprovado <= '1' when result >= 110 else '0';
+	reprovado <= '1' when result > 011 else '0';
+	exame <= '1' when else 011 <= result < 110 else '0';
+	
+end comportamento;
