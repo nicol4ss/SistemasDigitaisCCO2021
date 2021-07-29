@@ -16,91 +16,83 @@ END bc;
 
 
 ARCHITECTURE estrutura OF bc IS
-	TYPE state_type IS (S0, S1, S2, S3, S4, S5 );
-	SIGNAL state: state_type;
+	TYPE STATES IS (S0, S1, S2, S3, S4, S5 );
+	SIGNAL EAtual, PEstado: STATES;
 BEGIN
 	-- Logica de proximo estado (e registrador de estado)
 	PROCESS (clk, Reset)
 	BEGIN
 		if(Reset = '1') THEN
-			state <= S0 ;
+			EAtual <= S0 ;
 		ELSIF (clk'EVENT AND clk = '1') THEN
-			CASE state IS
+			EAtual <= PEstado;
+		end if;
+	end process;
+	
+	process(EAtual, PEstado, inicio, Az, Bz)
+	begin
+			CASE EAtual IS
 				WHEN S0 =>
-					if (ini = '1') then
-						state <= S1;
-					else
-						state <= S0;
-					end if;
+                ini <= '0';
+				    CA <= '0';
+				    dec <= '0';
+				    CP <= '0';
+				    pronto <= '0';
+					 
+					 if (inicio = '0') then
+                    PEstado <= S0;
+                else
+                    PEstado <= S1;
+                end if;
 
 				WHEN S1 => 
-					state <= S2;
+                pronto <= '0';
+				    CA <= '1';
+				    ini <= '1';
+				    dec <= '0';
+				    CP <= '0';
+
+                PEstado <= S2;
+					
 
 				WHEN S2 =>
-					if (Az = 0 and Bz = 0) then
-						state <= S5;
+                ini <= '0';
+				    CA <= '0';
+				    dec <= '0';
+				    CP <= '0';
+				    pronto <= '0';
+					if (Az = '1' or Bz = '1') then
+						 PEstado <= S5;
 					else
-						state <= S3;
+						 PEstado <= S3;
 					end if;
 
 				WHEN S3 =>
-					state <= S4;
+					ini <= '0';
+               CA <= '0';
+               dec <= '0';
+               CP <= '1';
+               pronto <= '0';
+            
+					PEstado <= S4;
 
 				WHEN S4 =>
-					state <= S2;
+					ini <= '0';
+				    CA <= '1';
+				    dec <= '1';
+				    CP <= '0';
+				    pronto <= '0';
+
+                PEstado <= S2;
 
 				WHEN S5 =>
-					state <= S0;
-					
-			END CASE;
-		END IF;
-	END PROCESS;
-	
-	-- Logica de saida
-	PROCESS (state)
-	BEGIN
-		CASE state IS
-			WHEN S0 =>
-				ini <= '0';
-				CA <= '0';
-				dec <= '0';
-				CP <= '0';
-				pronto <= '0';
-				
-			WHEN S1 =>
-				pronto <= 0;
-				CA <= 1;
-				ini <= 1;
-				dec <= '0';
-				CP <= '0';
-				
-			WHEN S2 =>
-				ini <= '0';
-				CA <= '0';
-				dec <= '0';
-				CP <= '0';
-				pronto <= '0';
-				
-			WHEN S3 =>
-					ini <= '0';
-					CA <= '0';
-					dec <= '0';
-					CP <= '1';
-					pronto <= '0';
-				
-			WHEN S4 =>
-				ini <= '0';
-				CA <= '1';
-				dec <= '1';
-				CP <= '0';
-				pronto <= '0';
-				
-			WHEN S5 =>
-				pronto <= 1;
-				ini <= '0';
-				CA <= '0';
-				dec <= '0';
-				CP <= '0';
-		END CASE;
+                pronto <= '1';
+				    ini <= '0';
+				    CA <= '0';
+				    dec <= '0';
+				    CP <= '0';
+
+                PEstado <= S0;
+			END CASE;		
 	END PROCESS;
 END estrutura;

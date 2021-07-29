@@ -6,7 +6,7 @@ entity multiplicador is
          inicio: in std_logic;
          reset: in std_logic;
          ck: in std_logic;
-         entA: in std_logic_vector(3 downto 0);
+         entA: in std_logic;
          entB: in std_logic_vector(3 downto 0);
          pronto: out std_logic;
          saida: out std_logic_vector(3 downto 0);
